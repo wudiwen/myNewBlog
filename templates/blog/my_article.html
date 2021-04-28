@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    <title>我的文章</title>
+{% endblock %}
+
+{% block user_icon %}
+    <a class="navbar-brand"><img src="/static/{{ user.icon }}" height="40" width="40" alt="Progressus HTML5 template"></a>
+{% endblock %}
+
+{% block article_list %}
+    <div class="container" style="margin-top: 25px;">
+    {% for blog in article_list %}
+            <div class="row">
+                <div class="panel panel-default col-sm-10 col-sm-offset-2">
+                    <div class="panel-body" >
+                        <div class="media">
+                            <a class="media-left"><img  style="width: 40px;height: 40px;" src="/static/{{ blog.author.icon }}" alt="这是头像" title="头像"></a>
+        {#                    <a ><img src="/static/{{ blog.author.icon }}" height="40" width="40" alt="Progressus HTML5 template"></a>#}
+                            <div class="media-body row">
+                                <h3 class="media-heading" ><a href="{% url 'blog:blog_detail' blog.id %}">{{ blog.title }}</a> <small ><strong><a href="{% url 'blog:my_article' blog.author.id %}" style="color: black">{{ blog.author }}</a></strong></small ></h3>
+                                <p>{{ blog.content }}</p>
+                                <p style="color: gray"><small>{{ blog.created_time|date:"Y-m-d H:i" }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block pagination %}
+    <div class="col-sm-7 col-sm-offset-5">
+    <ul class="pagination" >
+    <li style="float: left;list-style-type: none;padding-left:10px;padding-right: 10px;"><a href="/blog/my_article/{{ user.id }}/?page=1">首页</a></li>
+         {% if article_list.has_previous %}
+                <li style="float: left;list-style-type: none;padding-left:10px;padding-right: 10px;"><a href="/blog/my_article/{{ user.id }}/?page={{ article_list.previous_page_number }}">上一页</a></li>
+        {% endif %}
+
+         {% for num in article_list.paginator.page_range %}
+            <li style="float: left; padding-left:10px;padding-right: 10px;list-style-type: none;"><a href="/blog/my_article/{{ user.id }}/?page={{ num }}">{{ num }}</a></li>
+         {% endfor %}
+
+        {% if article_list.has_next %}
+             <li style="list-style-type: none;padding-left:10px;padding-right: 10px;"><a href="/blog/my_article/{{ user.id }}/?page={{ article_list.next_page_number }}">下一页</a></li>
+        {% endif %}
+        <li style="list-style-type: none;padding-left:10px;padding-right: 10px;"><a href="/blog/my_article/{{ user.id }}/?page={{ article_list.paginator.num_pages }}">尾页</a></li>
+     </ul>
+</div>
+{% endblock %}
+
+{% block returnIndex %}
+    <div class="blog_title pager"><a href="{% url 'account:login_success' %}">返回首页</a></div>
+{% endblock %}

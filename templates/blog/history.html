@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    <title>浏览记录</title>
+{% endblock %}
+
+{% block user_icon %}
+    <a class="navbar-brand"><img src="/static/{{ user.icon }}" height="40" width="40" alt="Progressus HTML5 template"></a>
+{% endblock %}
+
+{% block history %}
+    <div class="container" style="margin-top: 25px;">
+    {% for blog in all_blogs %}
+            <div class="row">
+                <div class="panel panel-default col-sm-10 col-sm-offset-2">
+                    <div class="panel-body" >
+                        <div class="media">
+                            <a class="media-left"><img  style="width: 40px;height: 40px;" src="/static/{{ blog.author.icon }}" alt="这是头像" title="头像"></a>
+        {#                    <a ><img src="/static/{{ blog.author.icon }}" height="40" width="40" alt="Progressus HTML5 template"></a>#}
+                            <div class="media-body row">
+                                <h3 class="media-heading" ><a href="{% url 'blog:blog_detail' blog.id %}">{{ blog.title }}</a> <small ><strong><a href="{% url 'blog:my_article' blog.author.id %}" style="color: black">{{ blog.author }}</a></strong></small ></h3>
+{#                                <p>{{ blog.content }}</p>#}
+{#                                <p style="color: gray"><small>{{ blog.created_time|date:"Y-m-d H:i" }}</small></p>#}
+                            </div>
+
+                            <p><button id="add_fav_org_button" class="btn-round btn-light" style="background: #FFA042" ><a href="{% url 'blog:del_history' blog.id %}">删除记录</a></button></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {% endfor %}
+</div>
+{% endblock %}

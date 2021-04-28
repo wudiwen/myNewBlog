@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    <title>上传头像</title>
+{% endblock %}
+
+{% block icon %}
+    <div class="ui center aligned grid" style="margin-top: 200px">
+        <div class="ui six wide column">
+            <h1 class="ui teal header"><font color="black">更换头像</font></h1>
+            <div class="ui segment">
+                <div class="ui content">
+                    <form class="ui form" method="post" action="{%url 'account:upload' user.id%}"  enctype="multipart/form-data">
+                        <div>头像<input type="file" name="icon"></div>
+                        {{ error }}<br>
+                        <button class="ui fluid large teal button" type="submit">上传</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

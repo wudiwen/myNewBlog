@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+
+<body>
+    <p>gagagagagagag</p>
+    <form 
+    action="#"
+    method="POST"
+    id="reply_form"
+    >
+        {% csrf_token %}
+        <div class="form-group">
+            <div id="test">
+                {{ form.body }}
+            </div>
+        </div>
+    </form>
+    <!-- 提交按钮 -->
+    <button onclick="confirm_submit({{ article_id }}, {{ parent_comment_id }})" class="btn btn-primary" type="button" id="submit">发送</button>
+{#    <script src="{% static 'jquery/jquery-3.3.1.js' %}"></script>#}
+{#    <script src="{% static 'popper/popper-1.14.4.js' %}"></script>#}
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.4.3/cjs/popper-base.js"></script>
+
+    <!-- csrf token -->
+    <script src="{% static 'js/csrf.js' %}"></script>
+    
+    <script>
+
+ //   $(function(){
+ //       $(".django-ckeditor-widget").removeAttr('style');
+
+ //   });
+
+    function confirm_submit(article_id, comment_id){
+            var content = $('#id_body').val();
+
+        // 从 ckeditor 中取值
+        {#var content = document.getElementById('id_body').value();#}
+            alert(content);
+        // 调用 ajax 与后端交换数据
+        $.ajax({
+            {#url: 'blog/blog_detail/comment/' + article_id + '/' + comment_id,#}
+            type: 'POST',
+            data: {body: content},
+            // 成功回调
+            success: function(e){
+                if(e === '200 OK'){
+                    parent.location.reload();
+                }
+            }
+        });
+
+    }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    <title>修改昵称</title>
+{% endblock %}
+
+{% block nickname %}
+    <div class="container" style="position: absolute;top: 200px;">
+        <div class="row">
+            <div class="col-12">
+                <br>
+                <div class="col-md-4" style="color: black">用户名: {{ user.username }}</div>
+                <br>
+
+                <form  action="{% url 'account:profile_edit' user.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <!-- phone -->
+                    <div class="form-group col-md-4">
+                        <div class="col-md-10 text-left" style="color: black">新的昵称: {{ profile_form.nickname }}</div>
+                    </div>
+    {#                <!-- bio -->#}
+    {#                <div class="form-group col-md-4">#}
+    {#                    <label for="bio">简介</label>#}
+    {#                    <textarea type="text" class="form-control" id="bio" name="bio" rows="12">{{ profile.bio }}</textarea>#}
+    {#                </div>#}
+                    <!-- 提交按钮 -->
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

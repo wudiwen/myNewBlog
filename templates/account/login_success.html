@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    <title>首页-Wenblog</title>
+{% endblock %}
+
+{% block user_icon %}
+    <a class="navbar-brand"><img src="/static/{{ user.icon }}" height="40" width="40" alt="Progressus HTML5 template"></a>
+{% endblock %}
+
+{% load static %}
+
+
+{% block center %}
+    <center>
+    <div class="container" style="padding-top:300px;min-height:800px">
+      <div class="row">,.
+        <p class="lead"><font color="black" >这里有好多好多资源喔，尽情的享用吧(〃'▽'〃)</font></p>
+        <p class="tagline"><font color="black">如果您有优秀的资源，欢迎投递哦</font></p>
+        <p><a class="btn btn-action btn-lg" role="button" href="{%url 'blog:blog_index' %}">START NOW</a></p>
+      </div>
+    </div>
+	</center>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./image/01.png" type="image/x-icon">
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {% block title %}
+    {% endblock %}
+
+    {% block css %}
+    {% endblock %}
+</head>
+<body style="background-color: azure;">
+    <nav class="navbar navbar-inverse" >
+        <div class="row">
+            <div class="col-sm-3">
+                <li style="margin: 5px 0;"><a><img src="{%static 'css/images/logo.PNG' %}" style="width: 158px; height: 40px" alt=这是头像></a></li>
+            </div>
+            <div class="col-sm-5">
+                <form class="navbar-form " method="get" action="{% url 'blog:search' %}">
+                    {% csrf_token %}
+                    <input  class="form-control" type="search" name="q" placeholder="输入文章标题 作者 内容" required>
+                    <button  class="btn btn-default" type="submit" value="Search">Search</button>
+                </form>
+            </div>
+            <div class="col-sm-4" >
+                    <ul class="nav navbar-nav">
+                        <li style="margin-top: -10px;">
+                            {% block user_icon %}
+                            {% endblock %}
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown">{{ user.nickname }}<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'blog:my_collect'%}">我的收藏</a></li>
+                                <li><a href="{% url 'account:profile_edit' user.id %}">修改昵称</a></li>
+                                <li><a href="{% url 'account:upload' user.id %}">上传头像</a></li>
+                                <li><a href="{% url 'blog:history' %}">浏览记录</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{%url 'account:login_success' %}">首页</a></li>
+                        <li><a href="{%url 'blog:my_article' user.id %}">我的文章</a></li>
+                        <li><a href="{%url 'blog:article_post'%}">发表</a></li>
+                        <li><a href="{%url 'account:logout'%}">注销</a></li>
+                    </ul>
+                </div>
+        </div>
+    </nav>
+
+<!-- 发表文章-->
+{% block post %}
+{% endblock %}
+
+
+
+<!-- 浏览记录-->
+{% block history %}
+{% endblock %}
+
+<!-- 我的收藏-->
+{% block collect %}
+{% endblock %}
+
+
+<!-- 上传头像-->
+{% block icon %}
+{% endblock %}
+
+<!-- 修改昵称 -->
+{% block nickname %}
+{% endblock %}
+
+<!--首页文字 -->
+{% block center %}
+{% endblock %}
+
+<!-- 文章列表 -->
+{% block article_list %}
+{% endblock %}
+
+<!-- 分页开始 -->
+{% block pagination %}
+{% endblock %}
+
+<!-- 返回首页 -->
+{% block returnIndex %}
+{% endblock %}
+
+</body>
+</html>
+

@@ -1,0 +1,190 @@
+{% load mptt_tags %}
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>文章详情</title>
+</head>
+<body class="container">
+
+<div class="blog_body">
+<div class="blog_title"><a href="{% url 'blog:blog_detail' article.id %}">{{ article.title }}</a></div>
+<div class="blog_info">
+  <ul class="blog_info_list">
+    <li>作者：{{ article.author }}</li>
+    <li>分类：{{ article.category }}</li>
+    <li>发表时间：{{ article.created_time|date:"Y-m-d H:i" }}</li>
+    <li>标签：
+      {% for tag in article.tags.all %}
+        {{ tag.name }}
+      {% endfor %}
+    </li>
+  </ul>
+</div>
+<div class="blog_description">
+  {{ article.content }}
+</div>
+<! --收藏-- >
+<p>
+    {% if has_fav %}
+        <button id="add_fav_org_button" class="btn-round btn-light" style="background: #FFA042">取消收藏</button>
+    {% else %}
+        <button id="add_fav_org_button" class="btn-round btn-light" style="background: #02DF82">添加收藏</button>
+    {% endif %}
+</p>
+
+<script type="text/javascript">
+
+//添加或取消收藏
+function add_fav_org(current_elem, col_id){
+
+    $.ajax({
+        cache: false,
+        type: "POST",
+        url:"{% url 'blog:collect' %}",
+        data:{'col_id':col_id},
+        async: true,
+
+        success: function(data) {
+
+            if(data.col_state === 'success'){
+                current_elem.text(data.col_msg);
+                // 修改按钮的颜色
+                if (data.col_msg === '取消收藏') {
+                    document.getElementById('add_fav_org_button').style.background = '#FFA042';
+                } else if (data.col_msg === '添加收藏') {
+                    document.getElementById('add_fav_org_button').style.background = '#02DF82';
+                }
+            }
+        },
+    });
+}
+
+$('#add_fav_org_button').on('click', function(){
+    add_fav_org($(this), {{ article.id }});
+
+});
+
+</script>
+
+<form action="{% url 'blog:article_comment' article.id %}" method="post" class="comment-form">
+  {% csrf_token %}
+  <div class="row">
+{#    <div class="col-md-4">#}
+{#      <label for="{{ form.username.id_for_label }}">名字：</label>#}
+{#      {{ form.username }}#}
+{#      {{ form.username.errors }}#}
+{#    </div>#}
+    <div class="col-md-4">
+      <label for="{{ form.body.id_for_label }}">评论：</label>
+      {{ form.body }}
+      {{ form.body.errors }}
+      <button type="submit" class="comment-btn">发表</button>
+    </div>
+  </div>    <!-- row -->
+</form>
+
+<h4>共有{{ comment_list.count }}条评论</h4>
+<div class="row">
+    <!-- 遍历树形结构 -->
+    {% recursetree comment_list %}
+        <!-- 给 node 取个别名 comment -->
+        {% with comment=node %}
+            <div class="{% if comment.reply_to %}
+                        offset-1 col-11
+                        {% else %}
+                        col-12
+                        {% endif %}">
+                <hr>
+                <p>
+                    <strong style="color: orange">
+                        {{ comment.user }}
+                    </strong>
+
+                    {% if comment.reply_to %}
+                        <i class="far fa-arrow-alt-circle-right"
+                           style="color: cornflowerblue;"
+                        ></i>
+                        <strong style="color: blue">
+                            <span style="color: black">回复：</span>{{ comment.reply_to }}
+                        </strong>
+                    {% endif %}
+
+                </p>
+
+
+                <div>{{ comment.body|safe }}</div>
+
+                <div>
+                    <span style="color: gray">
+                        {{ comment.createtime|date:"Y-m-d H:i" }}
+                    </span>
+
+                    <!-- modal 按钮 -->
+                    <button type="button"
+                            class="btn btn-light btn-sm text-muted"
+                            onclick="load_modal({{ article.id }}, {{ comment.id }})"
+                    >
+                        回复
+                    </button>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade"
+                     id="comment_{{ comment.id }}"
+                     tabindex="-1"
+                     role="dialog"
+                     aria-labelledby="CommentModalCenter"
+                     aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content" style="height: 480px">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">回复 {{ comment.user }}：</h5>
+                            </div>
+                            <div class="modal-body" id="modal_body_{{ comment.id }}"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                {% if not comment.is_leaf_node %}
+                    <div class="children">
+                        {{ children }}
+                    </div>
+                {% endif %}
+            </div>
+
+
+        {% endwith %}
+    {% endrecursetree %}
+</div>
+
+<!-- 新增代码，唤醒二级回复的 modal -->
+<script>
+    // 加载 modal
+    function load_modal(article_id, comment_id) {
+        let modal_body = '#modal_body_' + comment_id;
+        let modal_id = '#comment_' + comment_id;
+
+        // 加载编辑器
+        if ($(modal_body).children().length === 0) {
+            let content = '<iframe src="/blog/blog_detail/comment/' +
+            article_id +
+            '/' +
+            comment_id +
+            '" frameborder="0" style="width: 100%; height: 100%;"></iframe>';
+            $(modal_body).append(content);
+        }
+
+        $(modal_id).modal('show');
+    }
+</script>
+
+</div>
+<div class="blog_title"><a href="{% url 'blog:blog_index' %}">返回文章列表</a></div>
+
+</body>

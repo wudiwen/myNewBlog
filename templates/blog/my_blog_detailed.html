@@ -1,0 +1,49 @@
+<div class="blog_body">
+<div class="blog_title"><a href="{% url 'blog:my_blog_detail' article.id %}">{{ article.title }}</a></div>
+<div class="blog_info">
+  <ul class="blog_info_list">
+    <li>作者：{{ article.author }}</li>
+    <li>分类：{{ article.category }}</li>
+    <li>发表时间：{{ article.created_time|date:"Y-m-d H:i" }}</li>
+    <li>标签：
+      {% for tag in article.tags.all %}
+        {{ tag.name }}
+      {% endfor %}
+    </li>
+  </ul>
+</div>
+<div class="blog_description">
+  {{ article.content }}
+</div>
+<ul class="comment-list list-unstyled">
+  {% for comment in comment_list %}
+  <li class="comment-item">
+    <span class="nickname">{{ comment.user }}</span>
+    <time class="submit-date">{{ comment.createtime }}</time>
+    <div class="text">
+      {{ comment.body }}
+    </div>
+  </li>
+  {% empty %}
+  暂无评论
+  {% endfor %}
+</ul>
+<form action="{% url 'blog:article_comment' article.id %}" method="post" class="comment-form">
+  {% csrf_token %}
+  <div class="row">
+{#    <div class="col-md-4">#}
+{#      <label for="{{ form.username.id_for_label }}">名字：</label>#}
+{#      {{ form.username }}#}
+{#      {{ form.username.errors }}#}
+{#    </div>#}
+    <div class="col-md-4">
+      <label for="{{ form.body.id_for_label }}">评论：</label>
+      {{ form.body }}
+      {{ form.body.errors }}
+      <button type="submit" class="comment-btn">发表</button>
+    </div>
+  </div>    <!-- row -->
+</form>
+</div>
+
+<div class="blog_title"><a href="{% url 'blog:my_article' article.author.id%}">返回我的文章</a></div>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索</title>
+</head>
+<body>
+{% if search_list %}
+    {% for article in search_list %}
+        <div class="blog_title"><a href="{% url 'blog:blog_detail' article.id %}">{{ article.title }}</a></div>
+        <div class="blog_info">
+            <ul class="blog_info_list">
+                <li>作者：{{ article.author }}</li>
+                <li>分类：{{ article.category }}</li>
+                <li>发表时间：{{ article.created_time|date:"Y-m-d H:i" }}</li>
+                <li>标签：
+                  {% for tag in article.tags.all %}
+                    {{ tag.name }}
+                  {% endfor %}
+                </li>
+            </ul>
+        </div>
+        <div class="blog_description">
+          {{ article.content }}
+        </div>
+	{% endfor %}
+    <div class="blog_title"><a href="{% url 'account:login_success' %}">返回首页</a></div>
+{% else %}
+	{{ msg }}
+{% endif %}
+</body>
+</html>

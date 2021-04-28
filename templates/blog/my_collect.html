@@ -1,0 +1,57 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    <title>我的收藏</title>
+{% endblock %}
+
+{% block user_icon %}
+    <a class="navbar-brand"><img src="/static/{{ user.icon }}" height="40" width="40" alt="Progressus HTML5 template"></a>
+{% endblock %}
+
+{% block collect %}
+    <div class="container" style="margin-top: 25px;">
+    {% for blog in all_collect %}
+            <div class="row">
+                <div class="panel panel-default col-sm-10 col-sm-offset-2">
+                    <div class="panel-body" >
+                        <div class="media">
+                            <a class="media-left"><img  style="width: 40px;height: 40px;" src="/static/{{ blog.article.author.icon }}" alt="这是头像" title="头像"></a>
+        {#                    <a ><img src="/static/{{ blog.author.icon }}" height="40" width="40" alt="Progressus HTML5 template"></a>#}
+                            <div class="media-body row">
+                                <h3 class="media-heading" ><a href="{% url 'blog:blog_detail' blog.article_id %}">{{ blog.article }}</a> <small ><strong><a href="{% url 'blog:my_article' blog.user.id %}" style="color: black">{{ blog.article.author }}</a></strong></small ></h3>
+                                <p>{{ blog.article.content }}</p>
+                                <p style="color: gray"><small>{{ blog.article.created_time|date:"Y-m-d H:i" }}</small></p>
+                            </div>
+                            <p><button id="add_fav_org_button" class="btn-round btn-light" style="background: #FFA042" ><a href="{% url 'blog:cancelCol' blog.article_id %}">取消收藏</a></button></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block pagination %}
+    <div class="col-sm-7 col-sm-offset-5">
+    <ul class="pagination" >
+    <li style="float: left;list-style-type: none;padding-left:10px;padding-right: 10px;"><a href="/blog/my_collect/?page=1">首页</a></li>
+         {% if all_collect.has_previous %}
+                <li style="float: left;list-style-type: none;padding-left:10px;padding-right: 10px;"><a href="/blog/my_collect/?page={{ all_collect.previous_page_number }}">上一页</a></li>
+        {% endif %}
+
+         {% for num in all_collect.paginator.page_range %}
+            <li style="float: left; padding-left:10px;padding-right: 10px;list-style-type: none;"><a href="/blog/my_collect/?page={{ num }}">{{ num }}</a></li>
+         {% endfor %}
+
+        {% if all_collect.has_next %}
+             <li style="list-style-type: none;padding-left:10px;padding-right: 10px;"><a href="/blog/my_collect/?page={{ all_collect.next_page_number }}">下一页</a></li>
+        {% endif %}
+        <li style="list-style-type: none;padding-left:10px;padding-right: 10px;"><a href="/blog/my_collect/?page={{ all_collect.paginator.num_pages }}">尾页</a></li>
+     </ul>
+</div>
+{% endblock %}
+
+{% block returnIndex %}
+    <div class="blog_title pager"><a href="{% url 'account:login_success' %}">返回首页</a></div>
+{% endblock %}
+

@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    <title>发表文章</title>
+{% endblock %}
+
+{% block user_icon %}
+    <a class="navbar-brand"><img src="/static/{{ user.icon }}" height="40" width="40" alt="Progressus HTML5 template"></a>
+{% endblock %}
+
+{% block post %}
+    <div style="margin-left:10px">
+    <form class="form-horizontal" action="{% url 'blog:article_post' %}" method="post">{% csrf_token %}
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>标题:</span></div>
+            <div class="col-md-10 text-left">{{article_post_form.title}}</div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>分类:</span></div>
+            <div class="col-md-10 text-left">
+                <select name="c_category">
+                    {% for category in article_categorys %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>内容:</span></div>
+            <div class="col-md-10 text-left">{{article_post_form.content}}</div>
+        </div>
+        <div class="row">
+{#            <input type="button" class="btn btn-primary btn-lg" value="发布" onclick="publish_article()">#}
+            <button type="submit" class="comment-btn">发表</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
